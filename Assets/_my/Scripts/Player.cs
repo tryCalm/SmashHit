@@ -1,9 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI _text;
+    
     [Header("Movement")]
     [SerializeField] private float _baseSpeed = 10f;
     [SerializeField] private float _maxSpeed = 30f;
@@ -14,7 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform _shootOrigin;
     [SerializeField] private float _shootForce = 30f;
     [SerializeField] private float _shootCooldown = 0.2f;
-    private bool _canShoot = true;
+    private bool _canShoot = false;
     private Camera _mainCamera;
     
     [Header("Ball System")]
@@ -27,17 +32,18 @@ public class Player : MonoBehaviour
     
     private Transform _transform;
 
-    void Awake()
+    private void Awake()
     {
         _transform = transform;
         _mainCamera = Camera.main;
         _currentSpeed = _baseSpeed;
         _currentBalls = _initialBalls;
+        _text.text = _currentBalls.ToString();
         
         InitializeBallPool();
     }
 
-    void Update()
+    private void Update()
     {
         HandleMovement();
         HandleShootingInput();
@@ -80,10 +86,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void ApplyShoting()
+    {
+        _canShoot = true;
+    }
     private IEnumerator ShootBall()
     {
         _canShoot = false;
         _currentBalls--;
+        _text.text = _currentBalls.ToString();
         
         GameObject ball = GetBallFromPool();
         ball.transform.SetPositionAndRotation(
@@ -99,7 +110,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(_shootCooldown);
         _canShoot = true;
     }
-
     private Vector3 CalculateAimDirection()
     {
         Vector3 targetPosition = GetTargetWorldPosition();
@@ -150,6 +160,15 @@ public class Player : MonoBehaviour
     public void AddBalls(int amount)
     {
         _currentBalls = Mathf.Min(_currentBalls + amount, _maxBalls);
+        _text.text = _currentBalls.ToString();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Finish"))
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }
 

@@ -5,12 +5,12 @@ using UnityEngine.Serialization;
 
 public class DestructibleObject : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
-    void OnCollisionEnter()
+    private void OnCollisionEnter()
     {
         GetComponent<Rigidbody>().isKinematic = false;
         StartCoroutine(DestroyCoroutine());

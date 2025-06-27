@@ -13,7 +13,7 @@ public class Ball : MonoBehaviour
 
     private bool _isActive;
 
-    void Awake()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
     }
@@ -29,13 +29,17 @@ public class Ball : MonoBehaviour
         
         _rb.velocity = Vector3.zero;
         _rb.AddForce(force, ForceMode.Impulse);
+        StartCoroutine(DeactivateBall(5));
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
         if (!_isActive) return;
-        _isActive = false;
-        _player.AddBalls(1);
+        if (collision.gameObject.TryGetComponent(out DestructibleObject destructible))
+        {
+            _isActive = false;
+            _player.AddBalls(3);
+        }
         StartCoroutine(DeactivateBall());
     }
 
@@ -44,6 +48,13 @@ public class Ball : MonoBehaviour
         _isActive = false;
         
         yield return new WaitForSeconds(_deactivateDelay);
+        
+        _player.ReturnBallToPool(gameObject);
+    }
+    
+    private IEnumerator DeactivateBall(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         
         _player.ReturnBallToPool(gameObject);
     }
