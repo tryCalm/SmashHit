@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pallet 1 Debris Low Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8133798758428208261, guid: 19676b17afce29f4c8d46f7ec3849a56, type: 3}
+      propertyPath: m_TagString
+      value: Destructible
+      objectReference: {fileID: 0}
     - target: {fileID: 8911179234396878399, guid: 19676b17afce29f4c8d46f7ec3849a56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

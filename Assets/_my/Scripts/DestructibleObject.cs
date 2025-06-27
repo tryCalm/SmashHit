@@ -10,7 +10,7 @@ public class DestructibleObject : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter()
     {
         GetComponent<Rigidbody>().isKinematic = false;
         StartCoroutine(DestroyCoroutine());
